@@ -12,9 +12,12 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
+      "vue-tsx-support/enable-check",
+      "vue-tsx-support/options/enable-vue-router",
+      "vue-tsx-support/options/enable-nativeon",
       "node",
       "jest",
-      "webpack-env"
+      "webpack-env",
     ],
     "paths": {
       "@/*": [

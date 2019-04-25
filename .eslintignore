@@ -1,3 +1,6 @@
 dist/*.js
 src/assets
 tests/unit/coverage
+
+# typings css
+*module.*.d.ts

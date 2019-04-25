@@ -49,7 +49,7 @@ service.interceptors.response.use(
             type: 'warning'
           }
         ).then(() => {
-          UserModule.FedLogOut().then(() => {
+          UserModule.fedLogOut().then(() => {
             location.reload() // To prevent bugs from vue-router
           })
         })

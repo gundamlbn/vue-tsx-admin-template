@@ -1,0 +1,151 @@
+diff --git a/node_modules/typedoc-plugin-single-line-tags/plugin.js b/node_modules/typedoc-plugin-single-line-tags/plugin.js
+index cdee13e..cc0a825 100644
+--- a/node_modules/typedoc-plugin-single-line-tags/plugin.js
++++ b/node_modules/typedoc-plugin-single-line-tags/plugin.js
+@@ -1,78 +1,52 @@
+-var __extends = (this && this.__extends) || (function () {
+-    var extendStatics = Object.setPrototypeOf ||
+-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+-    return function (d, b) {
+-        extendStatics(d, b);
+-        function __() { this.constructor = d; }
+-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+-    };
+-})();
++"use strict";
+ var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+     return c > 3 && r && Object.defineProperty(target, key, r), r;
+ };
+-(function (factory) {
+-    if (typeof module === "object" && typeof module.exports === "object") {
+-        var v = factory(require, exports);
+-        if (v !== undefined) module.exports = v;
++Object.defineProperty(exports, "__esModule", { value: true });
++const components_1 = require("typedoc/dist/lib/converter/components");
++const converter_1 = require("typedoc/dist/lib/converter/converter");
++const _ts = require("typedoc/dist/lib/ts-internal");
++const options_1 = require("typedoc/dist/lib/utils/options");
++/**
++ * This plugin moves all lines with single-line-tags (within comments) to the bottom of the comment.
++ * This stops the comment from "eating" all the text that follows it.
++ */
++let SingleLineTagsPlugin = class SingleLineTagsPlugin extends components_1.ConverterComponent {
++    initialize() {
++        const options = this.application.options;
++        options.read({}, options_1.OptionsReadMode.Prefetch);
++        const defaultTags = ['internal', 'external', 'preferred', 'module', 'hidden'];
++        const userTags = (options.getValue('single-line-tags') || "").split(",");
++        this.singleLineTags = defaultTags.concat(userTags);
++        this.regexp = new RegExp(`@(${this.singleLineTags.join('|')})`);
++        this.listenTo(this.owner, converter_1.Converter.EVENT_CREATE_DECLARATION, this.onDeclaration, 1000);
+     }
+-    else if (typeof define === "function" && define.amd) {
+-        define(["require", "exports", "typedoc/dist/lib/converter/components", "typedoc/dist/lib/converter/converter", "typedoc/dist/lib/ts-internal", "typedoc/dist/lib/utils/options"], factory);
++    onDeclaration(context, reflection, node) {
++        if (!node)
++            return;
++        const sourceFile = _ts.getSourceFileOfNode(node);
++        if (!sourceFile)
++            return;
++        const comment = _ts.getJSDocCommentRanges(node, sourceFile.text);
++        if (!comment || !comment.length)
++            return;
++        const { pos, end } = comment[0];
++        const rawComment = sourceFile.text.substring(pos, end);
++        const lines = rawComment.split(/\r\n?|\n/);
++        const nontagLines = lines.filter(line => !this.regexp.exec(line));
++        const tagLines = lines.filter(line => this.regexp.exec(line));
++        const rearrangedCommentText = []
++            .concat(nontagLines.slice(0, -1))
++            .concat(tagLines)
++            .concat(nontagLines.slice(-1))
++            .join('\n');
++        sourceFile.text = sourceFile.text.substring(0, pos) + rearrangedCommentText + sourceFile.text.substring(end);
+     }
+-})(function (require, exports) {
+-    "use strict";
+-    Object.defineProperty(exports, "__esModule", { value: true });
+-    var components_1 = require("typedoc/dist/lib/converter/components");
+-    var converter_1 = require("typedoc/dist/lib/converter/converter");
+-    var _ts = require("typedoc/dist/lib/ts-internal");
+-    var options_1 = require("typedoc/dist/lib/utils/options");
+-    /**
+-     * This plugin moves all lines with single-line-tags (within comments) to the bottom of the comment.
+-     * This stops the comment from "eating" all the text that follows it.
+-     */
+-    var SingleLineTagsPlugin = (function (_super) {
+-        __extends(SingleLineTagsPlugin, _super);
+-        function SingleLineTagsPlugin() {
+-            return _super !== null && _super.apply(this, arguments) || this;
+-        }
+-        SingleLineTagsPlugin.prototype.initialize = function () {
+-            var options = this.application.options;
+-            options.read({}, options_1.OptionsReadMode.Prefetch);
+-            var defaultTags = ['internal', 'external', 'preferred', 'module', 'hidden'];
+-            var userTags = (options.getValue('single-line-tags') || "").split(",");
+-            this.singleLineTags = defaultTags.concat(userTags);
+-            this.regexp = new RegExp("@(" + this.singleLineTags.join('|') + ")");
+-            this.listenTo(this.owner, converter_1.Converter.EVENT_CREATE_DECLARATION, this.onDeclaration, 1000);
+-        };
+-        SingleLineTagsPlugin.prototype.onDeclaration = function (context, reflection, node) {
+-            var _this = this;
+-            if (!node)
+-                return;
+-            var sourceFile = _ts.getSourceFileOfNode(node);
+-            if (!sourceFile)
+-                return;
+-            var comment = _ts.getJSDocCommentRanges(node, sourceFile.text);
+-            if (!comment || !comment.length)
+-                return;
+-            var _a = comment[0], pos = _a.pos, end = _a.end;
+-            var rawComment = sourceFile.text.substring(pos, end);
+-            var lines = rawComment.split(/\r\n?|\n/);
+-            var nontagLines = lines.filter(function (line) { return !_this.regexp.exec(line); });
+-            var tagLines = lines.filter(function (line) { return _this.regexp.exec(line); });
+-            var rearrangedCommentText = []
+-                .concat(nontagLines.slice(0, -1))
+-                .concat(tagLines)
+-                .concat(nontagLines.slice(-1))
+-                .join('\n');
+-            sourceFile.text = sourceFile.text.substring(0, pos) + rearrangedCommentText + sourceFile.text.substring(end);
+-        };
+-        SingleLineTagsPlugin = __decorate([
+-            components_1.Component({ name: 'single-line-tags' })
+-        ], SingleLineTagsPlugin);
+-        return SingleLineTagsPlugin;
+-    }(components_1.ConverterComponent));
+-    exports.SingleLineTagsPlugin = SingleLineTagsPlugin;
+-});
++};
++SingleLineTagsPlugin = __decorate([
++    components_1.Component({ name: 'single-line-tags' })
++], SingleLineTagsPlugin);
++exports.SingleLineTagsPlugin = SingleLineTagsPlugin;
+diff --git a/node_modules/typedoc-plugin-single-line-tags/tsconfig.json b/node_modules/typedoc-plugin-single-line-tags/tsconfig.json
+new file mode 100644
+index 0000000..ca004f3
+--- /dev/null
++++ b/node_modules/typedoc-plugin-single-line-tags/tsconfig.json
+@@ -0,0 +1,18 @@
++{
++  "compilerOptions": {
++    "moduleResolution": "node",
++    "allowJs": true,
++    "module": "commonjs",
++    "target": "es2015",
++    "outDir": "./",
++    "experimentalDecorators": true,
++    "skipLibCheck": true,
++    "noImplicitAny": false
++  },
++  "files": [
++    "plugin.ts"
++  ],
++  "exclude": [
++    "node_modules"
++  ]
++}

@@ -6,6 +6,7 @@ import SvgIcon from 'vue-svgicon'
 import '@/styles/index.scss'
 import '@/icons/components'
 import '@/permission'
+import 'default-passive-events'
 
 /**
  * This project originally used easy-mock to simulate data requests,
@@ -16,7 +17,7 @@ import '@/permission'
  */
 import '../mock' // simulation data requests
 
-import App from '@/App.vue'
+import App from '@/app'
 import store from '@/store'
 import router from '@/router'
 import '@/registerServiceWorker'

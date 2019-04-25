@@ -12,9 +12,7 @@ module.exports = {
     sourceType: 'module'
   },
 
-  plugins: [
-    'vue'
-  ],
+  plugins: ['vue'],
 
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -30,13 +28,8 @@ module.exports = {
     'vue/eqeqeq': 'error',
     'vue/key-spacing': 'error',
     'vue/match-component-file-name': 'error',
-    'vue/object-curly-spacing': 'error'
+    'vue/object-curly-spacing': 'error',
   },
 
-  'extends': [
-    'eslint:recommended',
-    'plugin:vue/recommended',
-    '@vue/standard',
-    '@vue/typescript'
-  ]
+  extends: ['eslint:recommended', 'plugin:vue/recommended', '@vue/standard', '@vue/typescript']
 }

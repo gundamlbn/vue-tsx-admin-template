@@ -18,10 +18,10 @@ router.beforeEach((to: Route, from: Route, next: any) => {
       NProgress.done() // If current page is dashboard will not trigger afterEach hook, so manually handle it
     } else {
       if (UserModule.roles.length === 0) {
-        UserModule.GetUserInfo().then(() => {
+        UserModule.getUserInfo().then(() => {
           next()
         }).catch((err) => {
-          UserModule.FedLogOut().then(() => {
+          UserModule.fedLogOut().then(() => {
             Message.error(err || 'Verification failed, please login again')
             next({ path: '/' })
           })

@@ -1,0 +1,66 @@
+{
+  "workbench.colorTheme": "Solarized Light",
+  "workbench.iconTheme": "material-icon-theme",
+  "editor.renderWhitespace": "all",
+  "editor.tabSize": 2,
+  "files.autoGuessEncoding": true,
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "prettier.eslintIntegration": true,
+  "prettier.disableLanguages": [],
+  "prettier.singleQuote": true,
+  "prettier.semi": false,
+  "vetur.format.defaultFormatter.js": "prettier-eslint",
+  "vetur.trace.server": "off",
+  "eslint.run": "onSave",
+  "eslint.autoFixOnSave": true,
+  "eslint.trace.server":"off",
+  "eslint.packageManager": "yarn",
+  "eslint.validate": ["javascript", "javascriptreact",
+    {
+      "language": "vue",
+      "autoFix": true
+    },{
+      "language": "html",
+      "autoFix": true
+    },
+    {
+      "language": "javascript",
+      "autoFix": true
+    },
+    {
+      "language": "typescript",
+      "autoFix": true
+    },
+    {
+      "language": "typescriptreact",
+      "autoFix": true
+    }
+  ],
+  "importSorter.sortConfiguration.customOrderingRules.rules": [
+    {
+      "regex": "^vue",
+      "orderLevel": 4
+    },
+    {
+      "type": "importMember",
+      "regex": "^$",
+      "orderLevel": 5,
+      "disableSort": true,
+    },
+    {
+      "regex": "^[^.@]",
+      "orderLevel": 10
+    },
+    {
+      "regex": "^[@]",
+      "orderLevel": 15
+    },
+    {
+      "regex": "^[.]",
+      "orderLevel": 30
+    }
+  ],
+  "importSorter.importStringConfiguration.hasSemicolon": false,
+  "importSorter.importStringConfiguration.tabSize": 2,
+  "importSorter.importStringConfiguration.maximumNumberOfImportExpressionsPerLine.type": "newLineEachExpressionAfterCountLimitExceptIfOnlyOne",
+}

@@ -1,45 +1,90 @@
+import { Action, getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators'
+
 import Cookies from 'js-cookie'
-import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-decorators'
-import store from '@/store'
 
-export enum DeviceType {
-  Mobile,
-  Desktop,
-}
+import store, { StoreModules } from '@/store'
 
-export interface IAppState {
-  device: DeviceType;
+import { AppMutationTypes as MutationTypes } from '../mutation-types'
+
+/** 设备类型 */
+export type DeviceType = 'Mobile' | 'Desktop'
+
+/**
+ * App store State
+ */
+export type AppState = {
+  /** 设备类型 */
+  device: DeviceType
+  /** 侧边栏设置 */
   sidebar: {
-    opened: boolean;
-    withoutAnimation: boolean;
-  };
+    /** 是否打开 */
+    opened: boolean
+    /** 是否没有动画 */
+    withoutAnimation: boolean
+  }
 }
 
-@Module({ dynamic: true, store, name: 'app' })
-class App extends VuexModule implements IAppState {
-  public sidebar = {
+/** App模块名 */
+export const AppModuleName: StoreModules = 'app'
+
+/**
+ * App store 模块
+ * @store app
+ */
+@Module({ dynamic: true, store, name: AppModuleName })
+class App extends VuexModule implements AppState {
+  /**
+   * 侧边栏设置
+   * @state sidebar
+   */
+  sidebar: AppState['sidebar'] = {
     opened: Cookies.get('sidebarStatus') !== 'closed',
     withoutAnimation: false
-  };
-  public device = DeviceType.Desktop;
+  }
 
-  @Action({ commit: 'TOGGLE_SIDEBAR' })
-  public ToggleSideBar(withoutAnimation: boolean) {
+  /**
+   * 设备类型
+   * @state device
+   */
+  device: AppState['device'] = 'Desktop'
+
+  /**
+   * 侧边栏Toogle
+   * @param withoutAnimation 不带动画
+   * @
+   */
+  @Action({ commit: MutationTypes.TOGGLE_SIDEBAR })
+  toggleSideBar(withoutAnimation: boolean) {
     return withoutAnimation
   }
 
-  @Action({ commit: 'CLOSE_SIDEBAR' })
-  public CloseSideBar(withoutAnimation: boolean) {
+  /**
+   * 关闭侧边栏
+   * @param withoutAnimation 不带动画
+   * @action CloseSideBar
+   */
+  @Action({ commit: MutationTypes.CLOSE_SIDEBAR })
+  closeSideBar(withoutAnimation: boolean) {
     return withoutAnimation
   }
 
-  @Action({ commit: 'TOGGLE_DEVICE' })
-  public ToggleDevice(device: DeviceType) {
+  /**
+   * 侧边栏toggle
+   * @param device 设备类型
+   * @action toggleDevice
+   */
+  @Action({ commit: MutationTypes.TOGGLE_DEVICE })
+  toggleDevice(device: DeviceType) {
     return device
   }
 
+  /**
+   * 侧边栏toggle
+   * @param withoutAnimation 不带动画
+   * @mutation TOGGLE_SIDEBAR
+   */
   @Mutation
-  private TOGGLE_SIDEBAR(withoutAnimation: boolean) {
+  private [MutationTypes.TOGGLE_SIDEBAR](withoutAnimation: boolean) {
     if (this.sidebar.opened) {
       Cookies.set('sidebarStatus', 'closed')
     } else {
@@ -49,15 +94,25 @@ class App extends VuexModule implements IAppState {
     this.sidebar.withoutAnimation = withoutAnimation
   }
 
+  /**
+   * 关闭侧边栏
+   * @param withoutAnimation
+   * @mutation CLOSE_SIDEBAR
+   */
   @Mutation
-  private CLOSE_SIDEBAR(withoutAnimation: boolean) {
+  private [MutationTypes.CLOSE_SIDEBAR](withoutAnimation: boolean) {
     Cookies.set('sidebarStatus', 'closed')
     this.sidebar.opened = false
     this.sidebar.withoutAnimation = withoutAnimation
   }
 
+  /**
+   * 设备类型toggle
+   * @param device 设备类型
+   * @mutation TOGGLE_DEVICE
+   */
   @Mutation
-  private TOGGLE_DEVICE(device: DeviceType) {
+  private [MutationTypes.TOGGLE_DEVICE](device: DeviceType) {
     this.device = device
   }
 }
