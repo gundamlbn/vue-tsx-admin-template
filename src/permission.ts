@@ -1,3 +1,9 @@
+/**
+ * 通过路由控制权限
+ * @module permission
+ */
+
+/** import */
 import router from './router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -18,14 +24,16 @@ router.beforeEach((to: Route, from: Route, next: any) => {
       NProgress.done() // If current page is dashboard will not trigger afterEach hook, so manually handle it
     } else {
       if (UserModule.roles.length === 0) {
-        UserModule.getUserInfo().then(() => {
-          next()
-        }).catch((err) => {
-          UserModule.fedLogOut().then(() => {
-            Message.error(err || 'Verification failed, please login again')
-            next({ path: '/' })
+        UserModule.getUserInfo()
+          .then(() => {
+            next()
           })
-        })
+          .catch(err => {
+            UserModule.fedLogOut().then(() => {
+              Message.error(err || 'Verification failed, please login again')
+              next({ path: '/' })
+            })
+          })
       } else {
         next()
       }

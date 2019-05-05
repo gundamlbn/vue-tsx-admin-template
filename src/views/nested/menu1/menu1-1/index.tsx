@@ -7,7 +7,7 @@ import * as tsx from 'vue-tsx-support'
  */
 const Menu11 = (): VNode => (
   <div style="padding:30px;">
-    <el-alert closable={false} title="menu 1-1" type="success"/>
+    <el-alert closable={false} title="menu 1-1" type="success" />
   </div>
 )
 

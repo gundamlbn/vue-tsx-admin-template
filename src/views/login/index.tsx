@@ -100,7 +100,7 @@ export default class Login extends tsx.Component<{}> {
    * @method handleLogin
    */
   handleLogin() {
-    (this.$refs.loginForm as ElForm).validate((valid: boolean) => {
+    ;(this.$refs.loginForm as ElForm).validate((valid: boolean) => {
       if (valid) {
         this.loading = true
         UserModule.login(this.loginForm)

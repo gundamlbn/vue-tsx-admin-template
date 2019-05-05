@@ -9,12 +9,14 @@ import * as tsx from 'vue-tsx-support'
 @Component
 export default class Menu12 extends tsx.Component<{}> {
   render(): VNode {
-    return <div style="padding:30px;">
-      <el-alert closable={false} title="menu 1-2" type="success">
-        <transition name="fade-transform" mode="out-in">
-          <router-view />
-        </transition>
-      </el-alert>
-    </div>
+    return (
+      <div style="padding:30px;">
+        <el-alert closable={false} title="menu 1-2" type="success">
+          <transition name="fade-transform" mode="out-in">
+            <router-view />
+          </transition>
+        </el-alert>
+      </div>
+    )
   }
 }

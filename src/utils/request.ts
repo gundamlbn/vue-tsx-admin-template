@@ -10,21 +10,21 @@ const service = axios.create({
 
 // Request interceptors
 service.interceptors.request.use(
-  (config) => {
+  config => {
     // Add X-Token header to every request, you can add other custom headers here
     if (UserModule.token) {
       config.headers['X-Token'] = getToken()
     }
     return config
   },
-  (error) => {
+  error => {
     Promise.reject(error)
   }
 )
 
 // Response interceptors
 service.interceptors.response.use(
-  (response) => {
+  response => {
     // Some example codes here:
     // code == 20000: valid
     // code == 50008: invalid token
@@ -40,15 +40,11 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        MessageBox.confirm(
-          '你已被登出，可以取消继续留在该页面，或者重新登录',
-          '确定登出',
-          {
-            confirmButtonText: '重新登录',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-        ).then(() => {
+        MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
           UserModule.fedLogOut().then(() => {
             location.reload() // To prevent bugs from vue-router
           })
@@ -59,7 +55,7 @@ service.interceptors.response.use(
       return response.data
     }
   },
-  (error) => {
+  error => {
     Message({
       message: error.message,
       type: 'error',

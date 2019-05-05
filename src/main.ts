@@ -1,3 +1,9 @@
+/**
+ * Vue的主入口文件
+ * @module main
+ */
+
+/** import */
 import Vue from 'vue'
 
 import 'normalize.css'
@@ -34,5 +40,5 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store,
-  render: (h) => h(App)
+  render: h => h(App)
 }).$mount('#app')

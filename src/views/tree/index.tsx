@@ -88,9 +88,9 @@ export default class Tree extends tsx.Component<{}> {
    * @watch filterText
    * @param val
    */
-  @Watch(identity<keyof Tree >('filterText'))
+  @Watch(identity<keyof Tree>('filterText'))
   onFilterTextChange(val: string) {
-    ((this.$refs as Refs)['tree2'] as ElTree).filter(val)
+    ;((this.$refs as Refs)['tree2'] as ElTree).filter(val)
   }
 
   /**
@@ -100,7 +100,9 @@ export default class Tree extends tsx.Component<{}> {
    * @param data
    */
   filterNode(value: string, data: TreeData) {
-    if (!value) { return true }
+    if (!value) {
+      return true
+    }
     return data.label && data.label.indexOf(value) !== -1
   }
 
@@ -108,21 +110,23 @@ export default class Tree extends tsx.Component<{}> {
    * 渲染方法
    * @lifecycle render
    */
-  render():VNode {
-    return <div class="app-container">
-      <el-input
-        v-model={this.filterText}
-        placeholder="Filter keyword"
-        style="margin-bottom:30px;"
-      />
-      <el-tree
-        ref={identity<RefKeys>('tree2')}
-        data={this.data2}
-        props={this.defaultProps}
-        filter-node-method={this.filterNode}
-        class="filter-tree"
-        default-expand-all
-      />
-    </div>
+  render(): VNode {
+    return (
+      <div class="app-container">
+        <el-input
+          v-model={this.filterText}
+          placeholder="Filter keyword"
+          style="margin-bottom:30px;"
+        />
+        <el-tree
+          ref={identity<RefKeys>('tree2')}
+          data={this.data2}
+          props={this.defaultProps}
+          filter-node-method={this.filterNode}
+          class="filter-tree"
+          default-expand-all
+        />
+      </div>
+    )
   }
 }
