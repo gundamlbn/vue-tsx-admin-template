@@ -6,6 +6,8 @@ import store, { StoreModules } from '@/store'
 
 import { AppMutationTypes as MutationTypes } from '../mutation-types'
 
+export type AppMutationKeys = keyof Pick<App, 'TOGGLE_SIDEBAR' | 'CLOSE_SIDEBAR' | 'TOGGLE_DEVICE'>
+
 /** 设备类型 */
 export type DeviceType = 'Mobile' | 'Desktop'
 
@@ -84,7 +86,7 @@ class App extends VuexModule implements AppState {
    * @mutation TOGGLE_SIDEBAR
    */
   @Mutation
-  private [MutationTypes.TOGGLE_SIDEBAR](withoutAnimation: boolean) {
+  TOGGLE_SIDEBAR(withoutAnimation: boolean) {
     if (this.sidebar.opened) {
       Cookies.set('sidebarStatus', 'closed')
     } else {
@@ -100,7 +102,7 @@ class App extends VuexModule implements AppState {
    * @mutation CLOSE_SIDEBAR
    */
   @Mutation
-  private [MutationTypes.CLOSE_SIDEBAR](withoutAnimation: boolean) {
+  CLOSE_SIDEBAR(withoutAnimation: boolean) {
     Cookies.set('sidebarStatus', 'closed')
     this.sidebar.opened = false
     this.sidebar.withoutAnimation = withoutAnimation
@@ -112,7 +114,7 @@ class App extends VuexModule implements AppState {
    * @mutation TOGGLE_DEVICE
    */
   @Mutation
-  private [MutationTypes.TOGGLE_DEVICE](device: DeviceType) {
+  TOGGLE_DEVICE(device: DeviceType) {
     this.device = device
   }
 }

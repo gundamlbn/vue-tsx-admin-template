@@ -13,6 +13,8 @@ import { getToken, removeToken, setToken } from '@/utils/auth'
 
 import { UserMutationTypes as MutationTypes } from '../mutation-types'
 
+export type UserMutationKeys = keyof Pick<User, 'SET_TOKEN'>
+
 /**
  * User store State
  */
@@ -111,7 +113,7 @@ class User extends VuexModule implements UserState {
    * @param token
    */
   @Mutation
-  private [MutationTypes.SET_TOKEN](token: string) {
+  SET_TOKEN(token: string) {
     this.token = token
   }
 }
